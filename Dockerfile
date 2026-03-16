@@ -48,6 +48,7 @@ ENV GRAFANA_ADMIN_USER=admin
 ENV GRAFANA_ADMIN_PASSWORD=admin
 ENV LOKI_AUTH_USER=loki
 ENV LOKI_AUTH_PASSWORD=changeme
+ENV GF_SERVER_ROOT_URL=http://localhost:3000/
 
 # Port 3000 = Grafana, Port 3100 = Loki push API (behind basic auth)
 EXPOSE 3000 3100

@@ -18,7 +18,8 @@
         "GRAFANA_ADMIN_USER=admin",
         "GRAFANA_ADMIN_PASSWORD=CHANGE_ME",
         "LOKI_AUTH_USER=loki",
-        "LOKI_AUTH_PASSWORD=CHANGE_ME"
+        "LOKI_AUTH_PASSWORD=CHANGE_ME",
+        "GF_SERVER_ROOT_URL=https://basaltadmin.app.runonflux.io/"
       ],
       "commands": [],
       "containerData": "/loki",
