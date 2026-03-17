@@ -25,13 +25,15 @@ ENV GF_PATHS_PLUGINS=/var/lib/grafana/plugins
 ENV GF_PATHS_PROVISIONING=/etc/grafana/provisioning
 ENV PATH=/usr/share/grafana/bin:$PATH
 
-RUN mkdir -p /var/lib/grafana /var/log/grafana /etc/grafana/provisioning/datasources /etc/nginx
+RUN mkdir -p /var/lib/grafana /var/log/grafana /etc/grafana/provisioning/datasources /etc/grafana/provisioning/dashboards /etc/nginx
 
 # Loki config
 COPY loki/loki-config.yaml /etc/loki/loki-config.yaml
 
-# Grafana provisioning — auto-configure Loki datasource
+# Grafana provisioning — auto-configure Loki datasource + dashboards
 COPY grafana/provisioning/datasources/loki.yml /etc/grafana/provisioning/datasources/loki.yml
+COPY grafana/provisioning/dashboards/dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml
+COPY grafana/provisioning/dashboards/vultiserver.json /etc/grafana/provisioning/dashboards/vultiserver.json
 
 # Supervisor config
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
