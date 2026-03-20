@@ -1,0 +1,329 @@
+{
+  "uid": "basalt-testrunner",
+  "title": "Basalt Test Runner",
+  "tags": ["basalt", "tests", "testrunner"],
+  "timezone": "browser",
+  "refresh": "5m",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Tests Passing",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 5, "x": 0, "y": 0 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test=\"_summary\", level=\"info\"} [10m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "special", "options": { "match": "null", "result": { "text": "NO DATA", "color": "dark-gray" } } },
+            { "type": "value", "options": { "0": { "text": "FAILING", "color": "red" } } },
+            { "type": "range", "options": { "from": 1, "to": 999999, "result": { "text": "PASSING", "color": "green" } } }
+          ],
+          "noValue": "NO DATA"
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Failed (10m)",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 3, "x": 5, "y": 0 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"error\"} [10m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "noValue": "0"
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Passed (10m)",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 3, "x": 8, "y": 0 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"info\"} [10m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          },
+          "noValue": "0"
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 9,
+      "title": "Run Tests",
+      "type": "text",
+      "gridPos": { "h": 5, "w": 3, "x": 11, "y": 0 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8091/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
+      }
+    },
+    {
+      "id": 10,
+      "title": "",
+      "type": "text",
+      "transparent": true,
+      "gridPos": { "h": 2, "w": 10, "x": 14, "y": 0 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex;align-items:baseline;gap:8px;padding:4px 0\"><span style=\"font-size:16px;font-weight:500\">Last Run Results</span><span id=\"last-run-age\" style=\"font-size:12px;color:#8e8e8e\"></span></div><script>!function(){var e=document.getElementById('last-run-age');function u(){fetch('//' + window.location.hostname + ':8091/status').then(r=>r.json()).then(d=>{if(d.last_run_epoch){var m=Math.round((Date.now()/1000-d.last_run_epoch)/60);e.textContent=m<1?'just now':m+' min ago'}else{e.textContent='never'}}).catch(()=>{e.textContent=''})}u();setInterval(u,15000)}()</script>"
+      }
+    },
+    {
+      "id": 4,
+      "title": "",
+      "type": "table",
+      "gridPos": { "h": 10, "w": 10, "x": 14, "y": 2 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "{app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\"} | json suite, test, passed, duration_ms",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "replace": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "id": true,
+              "tsNs": true,
+              "Time": false,
+              "Line": true,
+              "app": true,
+              "service": true,
+              "host": true,
+              "level": true
+            },
+            "indexByName": {
+              "suite": 0,
+              "test": 1,
+              "passed": 2,
+              "duration_ms": 3,
+              "Time": 4
+            },
+            "renameByName": {
+              "suite": "Suite",
+              "test": "Test",
+              "passed": "Passed",
+              "duration_ms": "Duration (ms)",
+              "Time": "Time"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              { "field": "Time", "desc": true }
+            ]
+          }
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": 10
+          }
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Passed" },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": { "type": "color-text" }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "true": { "text": "PASS", "color": "green" }, "false": { "text": "FAIL", "color": "red" } } }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "footer": { "show": false }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Test Results Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 7, "w": 14, "x": 0, "y": 5 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"info\"} [5m]))",
+          "legendFormat": "passed",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"error\"} [5m]))",
+          "legendFormat": "failed",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "stacking": { "mode": "normal" },
+            "lineWidth": 0
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "passed" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "failed" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }]
+          }
+        ]
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Failures by Suite",
+      "type": "timeseries",
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 12 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "sum by (suite) (count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"error\"} [5m]))",
+          "legendFormat": "{{suite}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "points",
+            "pointSize": 10,
+            "fillOpacity": 0
+          },
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Failures by Test",
+      "type": "timeseries",
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 12 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "sum by (test) (count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"error\"} [5m]))",
+          "legendFormat": "{{test}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "points",
+            "pointSize": 8,
+            "fillOpacity": 0
+          },
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Recent Test Logs",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 19 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "{app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\"}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "enableLogDetails": true
+      }
+    }
+  ],
+  "schemaVersion": 39
+}

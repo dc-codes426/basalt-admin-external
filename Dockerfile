@@ -34,12 +34,20 @@ COPY loki/loki-config.yaml /etc/loki/loki-config.yaml
 COPY grafana/provisioning/datasources/loki.yml /etc/grafana/provisioning/datasources/loki.yml
 COPY grafana/provisioning/dashboards/dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml
 COPY grafana/provisioning/dashboards/vultiserver.json /etc/grafana/provisioning/dashboards/vultiserver.json
+COPY grafana/provisioning/dashboards/testrunner.json /etc/grafana/provisioning/dashboards/testrunner.json
 
 # Supervisor config
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Nginx config (basic auth proxy for Loki)
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Health checker
+COPY healthcheck.py /healthcheck.py
+
+# Test runner
+COPY testrunner.py /testrunner.py
+COPY tests/ /tests/
 
 # Entrypoint
 COPY entrypoint.sh /entrypoint.sh
@@ -51,8 +59,12 @@ ENV GRAFANA_ADMIN_PASSWORD=admin
 ENV LOKI_AUTH_USER=loki
 ENV LOKI_AUTH_PASSWORD=changeme
 ENV GF_SERVER_ROOT_URL=http://localhost:3000/
+ENV HEALTHCHECK_TARGET_URL=
+ENV HEALTHCHECK_INTERVAL=30
+ENV TESTRUNNER_INTERVAL=300
+ENV TESTRUNNER_TRIGGER_PORT=8090
 
 # Port 3000 = Grafana, Port 3100 = Loki push API (behind basic auth)
-EXPOSE 3000 3100
+EXPOSE 3000 3100 8090
 
 ENTRYPOINT ["/entrypoint.sh"]

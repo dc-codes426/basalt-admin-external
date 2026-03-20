@@ -10,14 +10,112 @@
   },
   "panels": [
     {
-      "id": 1,
-      "title": "Log Volume",
-      "type": "timeseries",
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+      "id": 5,
+      "title": "Server Status",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=~\".+\"} [1m]))",
+          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"healthcheck\", endpoint=\"ping\", level=\"info\"} [2m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "special", "options": { "match": "null", "result": { "text": "DOWN", "color": "red" } } },
+            { "type": "value", "options": { "0": { "text": "DOWN", "color": "red" } } },
+            { "type": "range", "options": { "from": 1, "to": 999999, "result": { "text": "UP", "color": "green" } } }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          },
+          "noValue": "DOWN"
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Errors (5m)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service!=\"healthcheck\", level=~\"error|fatal|panic\"} [5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "noValue": "0"
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 8,
+      "title": "Warnings (5m)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service!=\"healthcheck\", level=\"warning\"} [5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 }
+            ]
+          },
+          "noValue": "0"
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "textMode": "value"
+      }
+    },
+    {
+      "id": 1,
+      "title": "Log Volume",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 4 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service!=\"healthcheck\"} [1m]))",
+          "legendFormat": "logs",
           "refId": "A"
         }
       ],
@@ -38,26 +136,27 @@
       }
     },
     {
-      "id": 2,
-      "title": "Log Volume by Job",
+      "id": 12,
+      "title": "Health Check History",
       "type": "timeseries",
-      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 6 },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 10 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "sum by (job) (count_over_time({job=~\".+\"} [1m]))",
-          "legendFormat": "{{job}}",
+          "expr": "sum by (endpoint) (count_over_time({app=\"basalt-vultiserver\", service=\"healthcheck\", level=\"error\"} [1m]))",
+          "legendFormat": "{{endpoint}} failures",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 20,
-            "stacking": { "mode": "normal" }
+            "drawStyle": "points",
+            "pointSize": 8,
+            "fillOpacity": 0
           },
-          "color": { "mode": "palette-classic" }
+          "color": { "fixedColor": "red", "mode": "fixed" },
+          "noValue": "0"
         }
       },
       "options": {
@@ -68,11 +167,11 @@
       "id": 3,
       "title": "Error Rate",
       "type": "timeseries",
-      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 6 },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 10 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=~\".+\"} |~ \"(?i)(error|panic|fatal|exception)\" [1m]))",
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service!=\"healthcheck\", level=~\"error|fatal|panic\"} [1m]))",
           "legendFormat": "errors",
           "refId": "A"
         }
@@ -94,11 +193,11 @@
       "id": 4,
       "title": "Recent Logs",
       "type": "logs",
-      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 12 },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 16 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "{job=~\".+\"}",
+          "expr": "{app=\"basalt-vultiserver\", service!=\"healthcheck\"}",
           "refId": "A"
         }
       ],

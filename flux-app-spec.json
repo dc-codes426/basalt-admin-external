@@ -19,7 +19,9 @@
         "GRAFANA_ADMIN_PASSWORD=CHANGE_ME_grafana_password",
         "LOKI_AUTH_USER=loki",
         "LOKI_AUTH_PASSWORD=CHANGE_ME_loki_password",
-        "GF_SERVER_ROOT_URL=https://basaltadmin.app.runonflux.io/"
+        "GF_SERVER_ROOT_URL=https://basaltadmin.app.runonflux.io/",
+        "HEALTHCHECK_TARGET_URL=CHANGE_ME_vultiserver_url",
+        "HEALTHCHECK_INTERVAL=30"
       ],
       "commands": [],
       "containerData": "/loki",
