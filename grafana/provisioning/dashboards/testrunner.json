@@ -77,7 +77,7 @@
       "gridPos": { "h": 5, "w": 3, "x": 6, "y": 0 },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8091/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
+        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8090/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
       }
     },
     {
