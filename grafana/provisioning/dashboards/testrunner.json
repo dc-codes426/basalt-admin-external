@@ -10,42 +10,14 @@
   },
   "panels": [
     {
-      "id": 1,
-      "title": "Tests Passing",
-      "type": "stat",
-      "gridPos": { "h": 5, "w": 5, "x": 0, "y": 0 },
-      "datasource": { "type": "loki", "uid": "" },
-      "targets": [
-        {
-          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test=\"_summary\", level=\"info\"} [10m])",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [
-            { "type": "special", "options": { "match": "null", "result": { "text": "NO DATA", "color": "dark-gray" } } },
-            { "type": "value", "options": { "0": { "text": "FAILING", "color": "red" } } },
-            { "type": "range", "options": { "from": 1, "to": 999999, "result": { "text": "PASSING", "color": "green" } } }
-          ],
-          "noValue": "NO DATA"
-        }
-      },
-      "options": {
-        "reduceOptions": { "calcs": ["sum"] },
-        "colorMode": "background",
-        "textMode": "value"
-      }
-    },
-    {
       "id": 2,
       "title": "Failed (10m)",
       "type": "stat",
-      "gridPos": { "h": 5, "w": 3, "x": 5, "y": 0 },
+      "gridPos": { "h": 5, "w": 3, "x": 0, "y": 0 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"error\"} [10m])",
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"error\"} [10m]))",
           "refId": "A"
         }
       ],
@@ -72,11 +44,11 @@
       "id": 3,
       "title": "Passed (10m)",
       "type": "stat",
-      "gridPos": { "h": 5, "w": 3, "x": 8, "y": 0 },
+      "gridPos": { "h": 5, "w": 3, "x": 3, "y": 0 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"info\"} [10m])",
+          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test!=\"_summary\", level=\"info\"} [10m]))",
           "refId": "A"
         }
       ],
@@ -102,7 +74,7 @@
       "id": 9,
       "title": "Run Tests",
       "type": "text",
-      "gridPos": { "h": 5, "w": 3, "x": 11, "y": 0 },
+      "gridPos": { "h": 5, "w": 3, "x": 6, "y": 0 },
       "options": {
         "mode": "html",
         "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8091/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
