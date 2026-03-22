@@ -1,6 +1,6 @@
 {
-  "uid": "basalt-testrunner-dev",
-  "title": "Basalt Test Runner (Dev)",
+  "uid": "basalt-testrunner",
+  "title": "Basalt Test Runner",
   "tags": ["basalt", "tests", "testrunner"],
   "timezone": "browser",
   "refresh": "1m",

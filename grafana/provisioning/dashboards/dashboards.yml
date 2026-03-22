@@ -1,16 +1,9 @@
 apiVersion: 1
 
 providers:
-  - name: dev
+  - name: default
     orgId: 1
-    folder: "Dev"
+    folder: ""
     type: file
     options:
-      path: /etc/grafana/provisioning/dashboards/dev
-
-  - name: prod
-    orgId: 1
-    folder: "Prod"
-    type: file
-    options:
-      path: /etc/grafana/provisioning/dashboards/prod
+      path: /etc/grafana/provisioning/dashboards
