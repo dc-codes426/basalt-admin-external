@@ -46,19 +46,23 @@
     },
     {
       "id": 7,
-      "title": "Errors (5m)",
+      "title": "Last Test Result",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "gridPos": { "h": 4, "w": 3, "x": 6, "y": 0 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
-          "expr": "sum(count_over_time({app=\"basalt-vultiserver\", service!=\"healthcheck\", level=~\"error|fatal|panic\"} [5m]))",
+          "expr": "last_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test=\"_summary\"} | json | unwrap failed [$__range])",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
+          "mappings": [
+            { "type": "value", "options": { "0": { "text": "PASS", "color": "green" } } },
+            { "type": "range", "options": { "from": 1, "to": 999999, "result": { "text": "FAIL", "color": "red" } } }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -66,13 +70,43 @@
               { "color": "red", "value": 1 }
             ]
           },
-          "noValue": "0"
+          "noValue": "No runs"
         }
       },
       "options": {
-        "reduceOptions": { "calcs": ["sum"] },
+        "reduceOptions": { "calcs": ["lastNotNull"] },
         "colorMode": "background",
-        "textMode": "value"
+        "textMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 9,
+      "title": "Last Run",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 9, "y": 0 },
+      "datasource": { "type": "loki", "uid": "" },
+      "targets": [
+        {
+          "expr": "last_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test=\"_summary\"} | json | unwrap failed [$__range])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dateTimeFromNow",
+          "color": { "fixedColor": "text", "mode": "fixed" },
+          "noValue": "No runs"
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "/Time/"
+        },
+        "colorMode": "background",
+        "textMode": "value",
+        "graphMode": "none"
       }
     },
     {
