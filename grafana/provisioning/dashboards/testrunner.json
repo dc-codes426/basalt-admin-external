@@ -139,7 +139,7 @@
       },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8091/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
+        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button id=\"run-tests-btn\" onclick=\"if(this.dataset.running==='true')return;var b=this;fetch('//' + window.location.hostname + ':8091/run').then(r=>r.json()).then(d=>{b.textContent='Running...';b.style.background='#e6a817';b.dataset.running='true'}).catch(()=>{b.textContent='Error';b.style.background='#dc3545';setTimeout(()=>{b.textContent='Run Tests Now';b.style.background='#3871dc'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div><script>!function(){var b=document.getElementById('run-tests-btn');function p(){fetch('//' + window.location.hostname + ':8091/status').then(r=>r.json()).then(d=>{if(d.is_running){b.textContent='Running...';b.style.background='#e6a817';b.dataset.running='true'}else if(b.dataset.running==='true'){b.textContent='Run Tests Now';b.style.background='#3871dc';b.dataset.running='false'}}).catch(()=>{})}p();setInterval(p,3000)}()</script>"
       }
     },
     {

@@ -52,6 +52,7 @@ trigger_event = threading.Event()
 # Timestamp of the last completed test run (epoch seconds), shared across threads
 last_run_time = None
 last_run_results = []
+is_running = False
 last_run_lock = threading.Lock()
 
 
@@ -150,7 +151,8 @@ class TriggerHandler(BaseHTTPRequestHandler):
         elif self.path == "/status":
             with last_run_lock:
                 ts = last_run_time
-            self._json_response({"last_run_epoch": ts})
+                running = is_running
+            self._json_response({"last_run_epoch": ts, "is_running": running})
         elif self.path == "/results":
             with last_run_lock:
                 ts = last_run_time
@@ -269,6 +271,9 @@ def push_results_to_loki(results):
 
 def run_tests():
     """Discover and run all test suites, push results."""
+    global is_running
+    with last_run_lock:
+        is_running = True
     suites = discover_suites()
     all_results = []
 
@@ -294,6 +299,7 @@ def run_tests():
         global last_run_time, last_run_results
         last_run_time = time.time()
         last_run_results = all_results
+        is_running = False
 
     if not all_results:
         print("No test suites found", flush=True)
