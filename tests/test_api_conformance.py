@@ -104,6 +104,13 @@ class PingConformance(_ConformanceBase):
     def test_ping_rejects_post(self):
         self.expect_status("POST", "/ping", 405)
 
+    def test_health_returns_200(self):
+        status, body = _raw_request(self._url("/health"))
+        assert status == 200, f"Expected 200, got {status}"
+        data = json.loads(body)
+        assert "containers" in data, "Expected 'containers' key in response"
+        assert len(data["containers"]) > 0, "Expected at least one container"
+
 
 # ============================================================================
 # GET /getDerivedPublicKey
