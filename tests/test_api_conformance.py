@@ -13,7 +13,7 @@ import uuid
 import urllib.request
 import urllib.error
 
-from testrunner import BaseTestSuite
+from testrunner import BaseTestSuite, _throttle
 
 
 def _hex(n_bytes):
@@ -27,6 +27,7 @@ def _uuid():
 
 def _raw_request(url, method="GET", body=None, headers=None, timeout=10):
     """Send an HTTP request and return (status, body) without raising on 4xx/5xx."""
+    _throttle()
     data = body.encode() if isinstance(body, str) else body
     hdrs = headers or {}
     req = urllib.request.Request(url, data=data, headers=hdrs, method=method)

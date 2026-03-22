@@ -26,7 +26,25 @@ LOKI_URL = "http://127.0.0.1:3101/loki/api/v1/push"
 INTERVAL = int(os.environ.get("TESTRUNNER_INTERVAL", "300"))
 TARGET_URL = os.environ.get("HEALTHCHECK_TARGET_URL", "")
 TRIGGER_PORT = int(os.environ.get("TESTRUNNER_TRIGGER_PORT", "8090"))
+REQUEST_DELAY = float(os.environ.get("TESTRUNNER_REQUEST_DELAY", "0.1"))
 HOSTNAME = socket.gethostname()
+
+# Global request throttle — ensures all outgoing HTTP requests are spaced apart
+_last_request_time = 0.0
+_request_lock = threading.Lock()
+
+
+def _throttle():
+    """Sleep if needed to maintain REQUEST_DELAY spacing between HTTP requests."""
+    global _last_request_time
+    if REQUEST_DELAY <= 0:
+        return
+    with _request_lock:
+        now = time.monotonic()
+        elapsed = now - _last_request_time
+        if elapsed < REQUEST_DELAY:
+            time.sleep(REQUEST_DELAY - elapsed)
+        _last_request_time = time.monotonic()
 
 # Event to signal an immediate test run
 trigger_event = threading.Event()
@@ -58,6 +76,7 @@ class BaseTestSuite:
 
     def http_get(self, path, timeout=10):
         """Helper: GET request against the target service."""
+        _throttle()
         url = self.target_url.rstrip("/") + path
         req = urllib.request.Request(url, method="GET")
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -65,6 +84,7 @@ class BaseTestSuite:
 
     def http_post(self, path, body=None, headers=None, timeout=10):
         """Helper: POST request against the target service."""
+        _throttle()
         url = self.target_url.rstrip("/") + path
         data = json.dumps(body).encode() if body else None
         hdrs = {"Content-Type": "application/json"}
@@ -138,7 +158,8 @@ class TriggerHandler(BaseHTTPRequestHandler):
             self._json_response({
                 "last_run_epoch": ts,
                 "tests": [
-                    {"suite": r.suite, "test": r.name, "passed": r.passed}
+                    {"suite": r.suite, "test": r.name, "passed": r.passed,
+                     "detail": r.detail}
                     for r in results
                 ],
             })
