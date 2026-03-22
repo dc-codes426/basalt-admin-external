@@ -139,7 +139,7 @@
       },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8090/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
+        "content": "<div style=\"display:flex;align-items:center;justify-content:center;height:100%\"><button onclick=\"fetch('//' + window.location.hostname + ':8091/run').then(r=>r.json()).then(d=>{this.textContent='Triggered!';setTimeout(()=>{this.textContent='Run Tests Now'},2000)}).catch(()=>{this.textContent='Error';setTimeout(()=>{this.textContent='Run Tests Now'},2000)})\" style=\"padding:12px 24px;font-size:16px;font-weight:bold;color:#fff;background:#3871dc;border:none;border-radius:6px;cursor:pointer\">Run Tests Now</button></div>"
       }
     },
     {
@@ -155,7 +155,7 @@
       },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex;align-items:baseline;gap:8px;padding:4px 0\"><span style=\"font-size:16px;font-weight:500\">Last Run</span><span id=\"last-run-age\" style=\"font-size:12px;color:#8e8e8e\"></span></div><script>!function(){var e=document.getElementById('last-run-age');function u(){fetch('//' + window.location.hostname + ':8090/status').then(r=>r.json()).then(d=>{if(d.last_run_epoch){var m=Math.round((Date.now()/1000-d.last_run_epoch)/60);e.textContent=m<1?'just now':m+' min ago'}else{e.textContent='never'}}).catch(()=>{e.textContent=''})}u();setInterval(u,15000)}()</script>"
+        "content": "<div style=\"display:flex;align-items:baseline;gap:8px;padding:4px 0\"><span style=\"font-size:16px;font-weight:500\">Last Run</span><span id=\"last-run-age\" style=\"font-size:12px;color:#8e8e8e\"></span></div><script>!function(){var e=document.getElementById('last-run-age');function u(){fetch('//' + window.location.hostname + ':8091/status').then(r=>r.json()).then(d=>{if(d.last_run_epoch){var m=Math.round((Date.now()/1000-d.last_run_epoch)/60);e.textContent=m<1?'just now':m+' min ago'}else{e.textContent='never'}}).catch(()=>{e.textContent=''})}u();setInterval(u,15000)}()</script>"
       }
     },
     {

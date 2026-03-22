@@ -64,6 +64,7 @@
       "targets": [
         {
           "expr": "last_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test=\"_summary\"} | json | unwrap failed [$__range])",
+          "legendFormat": "failed",
           "refId": "A"
         }
       ],
@@ -85,11 +86,12 @@
         }
       },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" },
         "colorMode": "background",
         "textMode": "value",
         "graphMode": "none"
-      }
+      },
+      "maxDataPoints": 1
     },
     {
       "id": 9,
@@ -100,6 +102,7 @@
       "targets": [
         {
           "expr": "last_over_time({app=\"basalt-vultiserver\", service=\"testrunner\", test=\"_summary\"} | json | unwrap failed [$__range])",
+          "legendFormat": "last_run",
           "refId": "A"
         }
       ],
@@ -118,7 +121,8 @@
         "colorMode": "background",
         "textMode": "value",
         "graphMode": "none"
-      }
+      },
+      "maxDataPoints": 1
     },
     {
       "id": 8,
