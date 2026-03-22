@@ -154,16 +154,16 @@ class DerivedPublicKeyConformance(_ConformanceBase):
 class VaultCreateConformance(_ConformanceBase):
     suite_name = "conformance_vault_create"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/create", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/create", 400, body={})
 
-    def test_missing_required_fields_returns_422(self):
-        self.expect_status("POST", "/vault/create", 422, body={
+    def test_missing_required_fields_returns_400(self):
+        self.expect_status("POST", "/vault/create", 400, body={
             "session_id": _uuid(),
         })
 
-    def test_invalid_session_id_returns_422(self):
-        self.expect_status("POST", "/vault/create", 422, body={
+    def test_invalid_session_id_returns_400(self):
+        self.expect_status("POST", "/vault/create", 400, body={
             "session_id": "not-a-uuid",
             "hex_encryption_key": _hex(32),
             "hex_chain_code": _hex(32),
@@ -199,11 +199,11 @@ class VaultCreateConformance(_ConformanceBase):
 class VaultReshareConformance(_ConformanceBase):
     suite_name = "conformance_vault_reshare"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/reshare", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/reshare", 400, body={})
 
-    def test_missing_required_fields_returns_422(self):
-        self.expect_status("POST", "/vault/reshare", 422, body={
+    def test_missing_required_fields_returns_400(self):
+        self.expect_status("POST", "/vault/reshare", 400, body={
             "public_key": _hex(33),
             "session_id": _uuid(),
         })
@@ -238,11 +238,11 @@ class VaultReshareConformance(_ConformanceBase):
 class VaultMigrateConformance(_ConformanceBase):
     suite_name = "conformance_vault_migrate"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/migrate", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/migrate", 400, body={})
 
-    def test_missing_required_fields_returns_422(self):
-        self.expect_status("POST", "/vault/migrate", 422, body={
+    def test_missing_required_fields_returns_400(self):
+        self.expect_status("POST", "/vault/migrate", 400, body={
             "public_key": _hex(33),
             "session_id": _uuid(),
         })
@@ -267,11 +267,11 @@ class VaultMigrateConformance(_ConformanceBase):
 class VaultImportConformance(_ConformanceBase):
     suite_name = "conformance_vault_import"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/import", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/import", 400, body={})
 
-    def test_missing_chains_returns_422(self):
-        self.expect_status("POST", "/vault/import", 422, body={
+    def test_missing_chains_returns_400(self):
+        self.expect_status("POST", "/vault/import", 400, body={
             "session_id": _uuid(),
             "hex_encryption_key": _hex(32),
             "hex_chain_code": _hex(32),
@@ -349,11 +349,11 @@ class VaultExistConformance(_ConformanceBase):
 class VaultSignConformance(_ConformanceBase):
     suite_name = "conformance_vault_sign"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/sign", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/sign", 400, body={})
 
-    def test_missing_required_fields_returns_422(self):
-        self.expect_status("POST", "/vault/sign", 422, body={
+    def test_missing_required_fields_returns_400(self):
+        self.expect_status("POST", "/vault/sign", 400, body={
             "public_key": _hex(33),
             "messages": ["deadbeef"],
         })
@@ -388,11 +388,11 @@ class VaultSignConformance(_ConformanceBase):
 class VaultMldsaConformance(_ConformanceBase):
     suite_name = "conformance_vault_mldsa"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/mldsa", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/mldsa", 400, body={})
 
-    def test_missing_required_fields_returns_422(self):
-        self.expect_status("POST", "/vault/mldsa", 422, body={
+    def test_missing_required_fields_returns_400(self):
+        self.expect_status("POST", "/vault/mldsa", 400, body={
             "public_key": _hex(33),
             "session_id": _uuid(),
         })
@@ -417,11 +417,11 @@ class VaultMldsaConformance(_ConformanceBase):
 class BatchKeygenConformance(_ConformanceBase):
     suite_name = "conformance_batch_keygen"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/batch/keygen", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/batch/keygen", 400, body={})
 
-    def test_missing_protocols_returns_422(self):
-        self.expect_status("POST", "/vault/batch/keygen", 422, body={
+    def test_missing_protocols_returns_400(self):
+        self.expect_status("POST", "/vault/batch/keygen", 400, body={
             "session_id": _uuid(),
             "hex_encryption_key": _hex(32),
             "hex_chain_code": _hex(32),
@@ -448,11 +448,11 @@ class BatchKeygenConformance(_ConformanceBase):
 class BatchReshareConformance(_ConformanceBase):
     suite_name = "conformance_batch_reshare"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/batch/reshare", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/batch/reshare", 400, body={})
 
-    def test_missing_required_fields_returns_422(self):
-        self.expect_status("POST", "/vault/batch/reshare", 422, body={
+    def test_missing_required_fields_returns_400(self):
+        self.expect_status("POST", "/vault/batch/reshare", 400, body={
             "public_key": _hex(33),
             "session_id": _uuid(),
             "hex_encryption_key": _hex(32),
@@ -479,11 +479,11 @@ class BatchReshareConformance(_ConformanceBase):
 class BatchImportConformance(_ConformanceBase):
     suite_name = "conformance_batch_import"
 
-    def test_empty_body_returns_422(self):
-        self.expect_status("POST", "/vault/batch/import", 422, body={})
+    def test_empty_body_returns_400(self):
+        self.expect_status("POST", "/vault/batch/import", 400, body={})
 
-    def test_missing_chains_returns_422(self):
-        self.expect_status("POST", "/vault/batch/import", 422, body={
+    def test_missing_chains_returns_400(self):
+        self.expect_status("POST", "/vault/batch/import", 400, body={
             "session_id": _uuid(),
             "hex_encryption_key": _hex(32),
             "encryption_password": "testpassword",
