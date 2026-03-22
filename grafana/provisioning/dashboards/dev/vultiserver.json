@@ -1,6 +1,6 @@
 {
-  "uid": "basalt-vultiserver",
-  "title": "Basalt Vultiserver",
+  "uid": "basalt-vultiserver-dev",
+  "title": "Basalt Vultiserver (Dev)",
   "tags": ["basalt", "vultiserver", "loki"],
   "timezone": "browser",
   "refresh": "30s",

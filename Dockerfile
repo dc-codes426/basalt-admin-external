@@ -33,8 +33,8 @@ COPY loki/loki-config.yaml /etc/loki/loki-config.yaml
 # Grafana provisioning — auto-configure Loki datasource + dashboards
 COPY grafana/provisioning/datasources/loki.yml /etc/grafana/provisioning/datasources/loki.yml
 COPY grafana/provisioning/dashboards/dashboards.yml /etc/grafana/provisioning/dashboards/dashboards.yml
-COPY grafana/provisioning/dashboards/vultiserver.json /etc/grafana/provisioning/dashboards/vultiserver.json
-COPY grafana/provisioning/dashboards/testrunner.json /etc/grafana/provisioning/dashboards/testrunner.json
+COPY grafana/provisioning/dashboards/dev/ /etc/grafana/provisioning/dashboards/dev/
+COPY grafana/provisioning/dashboards/prod/ /etc/grafana/provisioning/dashboards/prod/
 
 # Supervisor config
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
