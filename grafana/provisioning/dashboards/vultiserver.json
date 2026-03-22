@@ -10,10 +10,21 @@
   },
   "panels": [
     {
+      "id": 100,
+      "type": "text",
+      "title": "",
+      "gridPos": { "h": 2, "w": 24, "x": 0, "y": 0 },
+      "options": {
+        "mode": "markdown",
+        "content": "### Target: `__TARGET_URL__`"
+      },
+      "transparent": true
+    },
+    {
       "id": 5,
       "title": "Server Status",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 2 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
@@ -48,7 +59,7 @@
       "id": 7,
       "title": "Last Test Result",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 3, "x": 6, "y": 0 },
+      "gridPos": { "h": 4, "w": 3, "x": 6, "y": 2 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
@@ -84,7 +95,7 @@
       "id": 9,
       "title": "Last Run",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 3, "x": 9, "y": 0 },
+      "gridPos": { "h": 4, "w": 3, "x": 9, "y": 2 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
@@ -113,7 +124,7 @@
       "id": 8,
       "title": "Warnings (5m)",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 2 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
@@ -144,7 +155,7 @@
       "id": 4,
       "title": "Recent Logs",
       "type": "logs",
-      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 4 },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 6 },
       "datasource": { "type": "loki", "uid": "" },
       "targets": [
         {
